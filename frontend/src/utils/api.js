@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://css-chat-app.onrender.com/api";
 
 function getHeaders() {
   const token = localStorage.getItem("token");
