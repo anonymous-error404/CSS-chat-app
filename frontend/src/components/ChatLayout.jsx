@@ -87,7 +87,7 @@ export default function ChatLayout({ user, onLogout }) {
       // If this is the active chat, add decrypted message
       if (chatId === activeChat) {
         const otherUser = activeChatData?.participants.find(
-          (p) => p._id !== user.id
+          (p) => p._id !== user._id
         );
         if (otherUser?.publicKey) {
           const key = await getOrDeriveKey(otherUser.publicKey, otherUser._id);
@@ -137,7 +137,7 @@ export default function ChatLayout({ user, onLogout }) {
       socket.off("user-offline", onUserOffline);
       socket.off("online-users", onOnlineUsers);
     };
-  }, [activeChat, activeChatData, user.id]);
+  }, [activeChat, activeChatData, user._id]);
 
   // Scroll to bottom
   useEffect(() => {
@@ -209,7 +209,7 @@ export default function ChatLayout({ user, onLogout }) {
       const data = await chatAPI.getOne(chatId);
       setActiveChatData(data);
 
-      const otherUser = data.participants.find((p) => p._id !== user.id);
+      const otherUser = data.participants.find((p) => p._id !== user._id);
 
       // Derive key and decrypt messages
       let decryptedMsgs = [];
@@ -238,7 +238,7 @@ export default function ChatLayout({ user, onLogout }) {
   const sendMessage = async () => {
     if (!messageText.trim() || !activeChat || !activeChatData) return;
 
-    const otherUser = activeChatData.participants.find((p) => p._id !== user.id);
+    const otherUser = activeChatData.participants.find((p) => p._id !== user._id);
     if (!otherUser?.publicKey) return;
 
     try {
@@ -308,8 +308,8 @@ export default function ChatLayout({ user, onLogout }) {
 
   const getChatOtherUser = useCallback(() => {
     if (!activeChatData) return null;
-    return activeChatData.participants.find((p) => p._id !== user.id);
-  }, [activeChatData, user.id]);
+    return activeChatData.participants.find((p) => p._id !== user._id);
+  }, [activeChatData, user._id]);
 
   const otherUser = getChatOtherUser();
 
@@ -493,7 +493,7 @@ export default function ChatLayout({ user, onLogout }) {
 
                 {messages.map((msg, idx) => {
                   const senderId = msg.sender?._id || msg.sender;
-                  const isOwn = senderId === user.id;
+                  const isOwn = senderId === user._id;
 
                   // Date divider logic
                   let showDate = false;
